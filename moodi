@@ -1,0 +1,169 @@
+package proyd;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.util.Scanner;
+
+
+
+public class SegundoPro {
+	Scanner sc = new Scanner (System.in);
+
+	public static void main(String[] args) {
+		SegundoPro sp= new SegundoPro ();
+		sp.menu();
+				
+		}
+		public void menu(){
+			byte op1;
+			do{
+				System.out.println("Bienvenidos");
+				System.out.println("Elija Opcion");
+				System.out.println("1.VerificarArchivo ");
+				System.out.println("2.Crear");
+				System.out.println("3.Asignar ");
+				System.out.println("4.Agregar");
+				System.out.println("5.Modificar");
+				System.out.println("6.Salir");
+				
+				op1 = scan.nextByte();
+		 		switch(op1){
+				
+		   		case 1 :
+		   		
+		   			if (verificarArchivo()){
+						 System.out.print("\nEl archivo ya existe");
+					 }else {
+						 System.out.print("\nEl archivo no existe");
+					 }
+		   			break;
+		   		case 2 :
+		   		 if (crearArchivo()) {
+					 System.out.print("\n El archivo ha sido creado satisfactoriamente");
+				}
+		   		 break;
+		   			   
+		   		case 3:
+		   			asignacion();
+		   			break;
+		   		case 4 :
+		   			  if(agregarRegistro()) {
+		   			   System.out.println("se agregaron los datos al registro");
+		   			   }
+		   			   break;
+		   		case 5:
+		   		 // if(buscarRegistro()) {
+		   			//	 System.out.println("su busqueda se cargo con exito");
+		   			//}
+		   		
+		   		default:
+		   			break;
+		   			   
+		   			}
+				}while(op1!=9);
+			}
+		
+		
+		public void asignacion() throws IOException {
+			RandomAccessFile rac = new RandomAccessFile("C:/Users/GMG/Desktop/Asignar.txt");
+			System.out.println("ingrese los nombres que le quiere dar a los campos con los que contara en el registro/n");	
+			String n,s,f,os,c,b;
+			System.out.println("ingrese el nombre para el campo ");
+			System.out.println("seccion para codigo unico o identificador del registro");
+			scan.nextLine();
+			n=scan.nextLine();
+			System.out.println("ingrese el nombre del siguiente campo ");
+			System.out.println("seccion para agregar oraciones o lineas de caracteres");
+			s=scan.nextLine();
+			System.out.println("ingrese el nombre del siguente campo ");
+			System.out.println("seccion de datos asignada para datos con punto decimal  ");
+			f=scan.nextLine();
+			System.out.println("ingrese el nombre para el campo ");
+			System.out.println("secion de datos para agregar lineas de caracteres mas extensa");
+			os=scan.nextLine();
+			System.out.println("ingrese el nombre para el campo");
+			System.out.println("seccion de datos para agregar una sola letra");
+			c=scan.nextLine();
+			System.out.println("ingrese el nombre para el campo ");
+			System.out.println("seccion de datos para agregar cantidades peque#as");
+			b=scan.nextLine();
+			
+			
+			rac.writeUTF(n);
+			rac.writeBytes(" ");
+			rac.writeUTF(s);
+			rac.writeBytes(" ");
+			rac.writeUTF(f);
+			rac.writeBytes(" ");
+			rac.writeUTF(os);
+			rac.writeBytes(" ");
+			rac.writeUTF(c);
+			rac.writeBytes(" ");
+			rac.writeUTF(b);
+
+			rac.close();
+			
+			
+			
+				
+		}
+		public boolean verificarArhivo(){
+			Final String ruta= " C:/Users/GMG/Desktop/Archivo de Datos .txt  ";
+			Final String ruta 2 ="C:/Users/GMG/Desktop/Asignar.txt ";
+			Final String ruta 3 = "  "
+				
+			
+			
+			File archivo = new File (ruta);
+			File archivo = new File (ruta 2);
+			File archivo = new File (ruta 3);
+			return archivo.exists();
+		}
+
+		public boolean crearArchivo(){
+			try{
+		
+			File archivo= new File(ruta);
+			return archivo.createNewFile();
+		    }catch (IOException e){
+		    	System.out.println("Ocurrio un error al abrirl el archvio\n " + e.getMessage());
+		    	return false ;
+		    }
+	}
+		
+	public boolean crearRegristo(int clave,String nombre, byte edad, float estatura){
+		try{
+			FileOutputStream out = new FileOutputStream (ruta,true);
+			DataOutputStream dout = new DataOutputStream(out);
+			dout.writeInt(clave);
+			dout.writeUTF(nombre);
+			dout.writeByte(edad);
+			dout.writeFloat(estatura);
+			dout.close();
+			return true;	
+		}catch (IOException e){
+			System.out.println("\nOcurrio una falla al ingresar los datos al archivo \n" + e.getMessage());
+			return false;
+		}
+	}
+		
+			
+				
+						
+				
+			
+			
+			
+			
+		
+	}
+
