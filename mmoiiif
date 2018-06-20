@@ -1,0 +1,595 @@
+mport java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class ProYec {
+
+
+
+
+
+	public static void main(String[] args) {
+      Scanner ld=new Scanner(System.in);
+      File definicion=new File("definicion.txt"); 
+if(!definicion.exists()){
+	try{
+		  FileWriter escribir=new FileWriter(definicion,true);
+		  String entidad;
+		  String nombre;
+		String tdat;
+		int longitud;
+		System.out.println("Ingrese nombre de la entidad");
+		entidad=ld.nextLine();
+		
+		escribir.write(entidad+"\r\n");
+		Boolean seguir=false;
+		
+		while(seguir==false){
+			ld=new Scanner(System.in);
+			nombre=null;
+			tdat=null;
+			longitud=0;
+			System.out.println();
+			System.out.println("Ingrese nombre del atributo");
+			nombre=ld.nextLine();
+			  System.out.println();
+			System.out.println("Seleccione un tipo de dato:");
+			System.out.println("1.String");
+			  System.out.println("2.Date");
+			  System.out.println("3.Long");
+			  System.out.println("4.Double");
+			  System.out.println("5.Integer");
+			
+			int opc =0;
+			opc=ld.nextInt();
+			
+			switch(opc){
+case 1:
+tdat="String";
+break;
+case 2:
+tdat="Date";
+break;
+case 3:
+tdat="Long";
+break;
+case 4:
+tdat="Double";
+break;
+case 5:
+tdat="Integer";
+break;
+default:
+tdat=null;
+break;
+              }
+
+System.out.println("Ingrese longitud para el tipo de dato, si no es necesario ingrese 0");
+longitud=ld.nextInt();
+
+escribir.write(nombre+"\r\n");
+escribir.write(tdat+"\r\n");
+escribir.write(longitud+"\r\n");
+
+System.out.println("desea agregar otro dato al atributo?");
+System.out.println("Presione 1 si agregara algo mas o cualquier numero si no es asi");
+int r=ld.nextInt();
+
+if(r!=1){
+seguir=true;
+escribir.close();
+              }
+
+              }
+
+          }catch(IOException e){
+System.out.println("Error de Archivo");
+          }catch(Exception e){
+System.out.println("Error de tipo de dato o nulo");
+}
+          }
+
+ld=new Scanner(System.in);
+      System.out.println();
+      System.out.println();
+
+      Boolean terminar=false;
+while(terminar==false){
+System.out.println("Entidad creada");
+System.out.println("Que accion desea realizar?");
+System.out.println("Consultar base de datos");
+System.out.println("1)agregar registro");
+      System.out.println("2)eliminar registro");
+      System.out.println("3)modificar registro");
+int elecion=0;
+elecion=ld.nextInt();
+
+      String texto="";
+      String nentidad="";
+      String nnombre="";
+      String tdato="";
+
+int longi;
+if(elecion==1){
+ld = new Scanner(System.in);
+
+try{
+      FileReader lector=new FileReader("definicion.txt");
+      BufferedReader contenido=new BufferedReader(lector);
+      FileOutputStream fos = new FileOutputStream("db.dat");;
+      DataOutputStream salida = new DataOutputStream(fos);    
+
+nentidad=contenido.readLine();
+
+while((texto=contenido.readLine())!=null){
+
+try{
+
+ld=new Scanner(System.in);
+nnombre=texto;
+tdato=contenido.readLine();
+longi=Integer.parseInt(contenido.readLine());
+System.out.println("ingrese el "+nnombre+" ("+tdato+")");
+
+if(tdato.compareToIgnoreCase("String")==0){
+              String sname=ld.nextLine();
+if(sname.length()>longi){
+System.out.println("Dato excede el tamano ingresado de "+longi+" caracteres.");
+}
+salida.writeUTF(sname);
+          }
+if(tdato.compareToIgnoreCase("Integer")==0){
+int sname=ld.nextInt();
+salida.writeInt(sname);
+          }
+if(tdato.compareToIgnoreCase("Date")==0){
+              System.out.println("Ingrese anio");
+int anio=ld.nextInt();
+              System.out.println("Ingrese mes");
+int mes=ld.nextInt();
+              System.out.println("Ingrese dia");
+int dia=ld.nextInt();
+
+salida.writeInt(anio);
+salida.writeInt(mes);
+salida.writeInt(dia);
+} 
+if(tdato.compareToIgnoreCase("Long")==0){
+long dato=ld.nextLong();
+salida.writeLong(dato);
+          }
+if(tdato.compareToIgnoreCase("Double")==0){
+double dato=ld.nextDouble();
+salida.writeDouble(dato);
+          }
+
+          System.out.println(nnombre+" "+tdato+" "+longi);
+}catch(Exception e){
+System.out.println("Error con los datos intente nuevamente");
+          }
+      }
+contenido.close();
+salida.close();
+      }catch(IOException e){
+System.out.println("Error al leer");
+e.printStackTrace();
+}
+      }
+if(elecion ==2){        
+try{
+          FileInputStream fis = new FileInputStream("db.dat");
+          DataInputStream entrada = new DataInputStream(fis); 
+          FileReader lector=new FileReader("definicion.txt");
+          BufferedReader contenido=new BufferedReader(lector);
+
+          String nn=contenido.readLine();
+          System.out.println(nn);
+
+while((texto=contenido.readLine())!=null){
+          String nm=texto;
+          String tipo=contenido.readLine();
+contenido.readLine();
+
+if(tipo.compareToIgnoreCase("String")==0){
+              String n1=entrada.readUTF();
+              System.out.println(n1);
+          }
+if(tipo.compareToIgnoreCase("Integer")==0){
+int n2=entrada.readInt();
+              System.out.println(n2);
+          }
+if(tipo.compareToIgnoreCase("Date")==0){
+int anio=entrada.readInt();
+int mes=entrada.readInt();
+int dia=entrada.readInt();
+              System.out.println(dia+"/"+mes+"/"+anio);
+          } 
+if(tipo.compareToIgnoreCase("Long")==0){
+long dato=entrada.readLong();
+              System.out.println(dato);
+          }
+if(tipo.compareToIgnoreCase("Double")==0){
+double dato=entrada.readDouble();
+              System.out.println(dato);
+          }
+     }     
+          }catch(Exception e){
+System.out.println("error con archivos");
+e.printStackTrace();
+          }
+      }
+if(elecion ==3){
+try {
+ld=new Scanner(System.in);
+              FileInputStream fis = new FileInputStream("db.dat");
+              DataInputStream entrada = new DataInputStream(fis);
+
+              FileOutputStream fisN = new FileOutputStream("x.dat");
+              DataOutputStream salida = new DataOutputStream(fisN); 
+
+System.out.println("Ingrese el contenido del primer atributo del registro que desea eliminar");
+String key=ld.nextLine();
+              Boolean a =true;
+while(a==true){
+try{
+                      String tipo=entrada.readUTF();    
+                      String nm=entrada.readUTF();    
+
+if(tipo.compareToIgnoreCase("String")==0){
+                           String n1=entrada.readUTF();
+
+if(key.compareToIgnoreCase(n1)==0){
+
+try{
+
+                              FileReader lector=new FileReader("definicion.txt");
+                              BufferedReader contenido=new BufferedReader(lector);
+contenido.readLine();
+contenido.readLine();
+contenido.readLine();
+contenido.readLine();
+System.out.println("registro con el atributo "+n1+" eliminado.");
+while(contenido.readLine()!=null){
+
+                              String tipe=contenido.readLine();
+contenido.readLine();
+if(tipe.compareToIgnoreCase("String")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readUTF();
+                                  }
+if(tipe.compareToIgnoreCase("Integer")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readInt();
+                                  }
+if(tipe.compareToIgnoreCase("Date")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readInt();
+entrada.readInt();
+entrada.readInt();
+                                  }
+if(tipe.compareToIgnoreCase("Long")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readLong();
+                                  }
+if(tipe.compareToIgnoreCase("Double")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readDouble();
+                                  }
+                              }
+
+                              }catch(Exception e){
+
+System.out.println("error ciclo");
+                              }
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeUTF(n1);
+                           }
+
+                      }
+
+if(tipo.compareToIgnoreCase("Integer")==0){
+int n2=entrada.readInt();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                          }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeInt(n2);
+                           }   
+                      }
+
+if(tipo.compareToIgnoreCase("Date")==0){
+int anio=entrada.readInt();
+int mes=entrada.readInt();
+int dia=entrada.readInt();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeInt(anio);
+salida.writeInt(mes);
+salida.writeInt(dia);
+                           }
+                      } 
+if(tipo.compareToIgnoreCase("Long")==0){
+long dato=entrada.readLong();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeLong(dato);
+                           }
+                      }
+if(tipo.compareToIgnoreCase("Double")==0){
+double dato=entrada.readDouble();
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeDouble(dato);
+                           }                          
+                      }
+
+                  }catch (EOFException e){
+e.printStackTrace();
+a=false;
+                  }
+              }
+
+fis.close();
+entrada.close();
+fisN.close();
+salida.close();
+
+                  File nuevo=new File("x.dat");
+                  File viejo=new File("db.dat");
+
+if(viejo.delete()==true){
+                      System.out.println("eliminado");
+}else{
+System.out.println("NO eliminado");
+                  }
+
+nuevo.renameTo(viejo);
+} catch (FileNotFoundException ex) {
+ex.printStackTrace();
+              Logger.getLogger(ProYec.class.getName()).log(Level.SEVERE, null, ex);
+          } catch (IOException ex) {
+ex.printStackTrace();
+              Logger.getLogger(ProYec.class.getName()).log(Level.SEVERE, null, ex);
+          }
+      }      
+
+if(elecion ==4){
+try {
+ld=new Scanner(System.in);
+              FileInputStream fis = new FileInputStream("db.dat");
+              DataInputStream entrada = new DataInputStream(fis);
+              FileOutputStream fisN = new FileOutputStream("x.dat");
+              DataOutputStream salida = new DataOutputStream(fisN); 
+System.out.println("Ingrese el contenido del primer atributo para modificar registro");
+String key=ld.nextLine();
+              Boolean a =true;
+while(a==true){
+try{
+                      String tipo=entrada.readUTF();    
+                      String nm=entrada.readUTF();    
+
+if(tipo.compareToIgnoreCase("String")==0){
+                           String n1=entrada.readUTF();
+
+if(key.compareToIgnoreCase(n1)==0){
+
+try{
+
+                          FileReader lector=new FileReader("definicion.txt");
+                          BufferedReader contenido=new BufferedReader(lector);
+contenido.readLine();
+contenido.readLine();
+contenido.readLine();
+contenido.readLine();
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeUTF(n1);       
+System.out.println("registro con el atributo "+n1+" modificado.");
+String nombreD="";
+while((nombreD=contenido.readLine())!=null){
+                          String tipe=contenido.readLine();
+                          String lOng=contenido.readLine();
+if(tipe.compareToIgnoreCase("String")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readUTF();
+System.out.println("ingrese nuevo "+nombreD+" del tipo "+tipe);
+String data=ld.nextLine();
+salida.writeUTF(nombreD);
+salida.writeUTF(tipe);
+salida.writeUTF(data);
+                                  }
+if(tipe.compareToIgnoreCase("Integer")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readInt();                        
+System.out.println("ingrese nuevo "+nombreD+" del tipo "+tipe);
+int data=ld.nextInt();
+salida.writeUTF(nombreD);
+salida.writeUTF(tipe);
+salida.writeInt(data);
+                                  }
+if(tipe.compareToIgnoreCase("Date")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readInt();
+entrada.readInt();
+entrada.readInt();
+
+System.out.println("ingrese nuevo "+nombreD+" del tipo "+tipe);
+System.out.println("ingrese anio");
+int anio=ld.nextInt();
+                         System.out.println("ingrese mes");
+int mes=ld.nextInt();
+                         System.out.println("ingrese dia");
+int dia=ld.nextInt();        
+salida.writeUTF(nombreD);
+salida.writeUTF(tipe);
+salida.writeInt(anio);
+salida.writeInt(mes);
+salida.writeInt(dia);
+                                  }
+if(tipe.compareToIgnoreCase("Long")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readLong();
+System.out.println("ingrese nuevo "+nombreD+" del tipo "+tipe);
+Long data=ld.nextLong();             
+salida.writeUTF(nombreD);
+salida.writeUTF(tipe);
+salida.writeLong(data);
+                                  }
+if(tipe.compareToIgnoreCase("Double")==0){
+entrada.readUTF();
+entrada.readUTF();
+entrada.readDouble();
+
+System.out.println("ingrese nuevo "+nombreD+" del tipo "+tipe);
+double data=ld.nextDouble();
+salida.writeUTF(nombreD);
+salida.writeUTF(tipe);
+salida.writeDouble(data);
+                                  }
+                              }
+
+lector.close();
+contenido.close();
+
+                       }catch(Exception e){
+
+                            System.out.println("error ciclo");
+                  }            
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeUTF(n1);
+                           }
+                      }
+
+if(tipo.compareToIgnoreCase("Integer")==0){
+int n2=entrada.readInt();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeInt(n2);
+                           }
+                      }
+
+if(tipo.compareToIgnoreCase("Date")==0){
+int anio=entrada.readInt();
+int mes=entrada.readInt();
+int dia=entrada.readInt();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeInt(anio);
+salida.writeInt(mes);
+salida.writeInt(dia);
+                           }
+                      } 
+if(tipo.compareToIgnoreCase("Long")==0){
+long dato=entrada.readLong();
+
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeLong(dato);
+                           }
+
+                      }
+if(tipo.compareToIgnoreCase("Double")==0){
+double dato=entrada.readDouble();
+
+if(key.compareToIgnoreCase(nm)==0){
+System.out.println("registro con el atributo "+nm+" eliminado.");
+                           }else{
+salida.writeUTF(tipo);
+salida.writeUTF(nm);
+salida.writeDouble(dato);
+                           }
+                      }
+                  }catch(EOFException e){
+e.printStackTrace();
+a=false;
+                  }
+
+              }
+
+fis.close();
+entrada.close();
+fisN.close();
+salida.close();
+
+                  File nuevo=new File("x.dat");
+                  File viejo=new File("db.dat");
+
+if(viejo.delete()==true){
+                      System.out.println("eliminado");
+}else{
+System.out.println("NO eliminado");
+                  }
+
+nuevo.renameTo(viejo);
+} catch (FileNotFoundException ex) {
+ex.printStackTrace();
+              Logger.getLogger(ProYec.class.getName()).log(Level.SEVERE, null, ex);
+          } catch (IOException ex) {
+ex.printStackTrace();
+              Logger.getLogger(ProYec.class.getName()).log(Level.SEVERE, null, ex);
+}
+
+      }
+System.out.println("Desea salir del programa?");
+System.out.println("1)si");
+      System.out.println("2)no");
+
+int f =ld.nextInt();
+
+if(f!=1){
+terminar = true;
+        }
+      }
+
+    }
+
+  }
